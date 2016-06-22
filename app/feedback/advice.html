@@ -1,0 +1,22 @@
+<ion-header-bar class=" nav-title-slide-ios7" align-title="center">
+    <button class="button button-clear button-assertive button-back" back>
+        <i class="icon ion-ios-arrow-back"></i>
+    </button>
+    <h1 class="title">意见反馈</h1>
+</ion-header-bar>
+
+<ion-content scroll="false" id="settings">
+
+   <div id="advice">
+       <label class="item item-input fbInput" id="adviceLable">
+           <textarea placeholder="谢谢您宝贵的建议，我们会做的更好" rows="6" ng-model="form.content"></textarea>
+       </label>
+       <div class="padding">
+           <button class="button button-block button-light" id="return-bottom" ng-click="submitAdvice(form)">提交</button>
+       </div>
+   </div>
+
+
+</ion-content>
+
+<div id='versionToast' class='hide'></div>

@@ -1,0 +1,204 @@
+<div class="bar bar-header bar-stable nav-title-slide-ios7" align-title="center" id="home">
+    <div ng-click="citySelectPopover.show()" id="location">
+        <button class="button button-clear button-assertive icon-right"
+                ng-class="{false:'ion-ios-arrow-down',true:''}[showDown]" style="color: #d43030;font-size: 16px;">
+            {{currentCity}}
+        </button>
+    </div>
+    <h1 class="title">餐馆无忧</h1>
+    <button class="button button-clear button-assertive" ui-sref="keyword-search({backUrl: '/main/home'})">
+        <i class="icon ion-ios-search"></i>
+        <span class="searchTitle">搜索</span>
+    </button>
+</div>
+
+<div id='customToast' class='hide'>活动</div>
+<ion-content class="has-header" id="home-page">
+    <ion-slide-box does-continue="true" auto-play="true" slide-interval="4000" style="background-color: #fff;"
+                   ng-if="banners && banners.length > 0">
+        <ion-slide ng-repeat="banner in banners">
+            <p class="margin0" ui-sref="activity({index:$index})" ng-if="banner.redirectUrl"><img
+                    ng-src="{{banner.imgUrl}}" width="100%"></p>
+
+            <p class="margin0" ng-if="!banner.redirectUrl"><img ng-src="{{banner.imgUrl}}" width="100%" ng-click="bannerActivity()"></p>
+        </ion-slide>
+    </ion-slide-box>
+
+    <div class="row">
+        <div class="col col-left" ui-sref="main.category">
+            <div style="height: 20px;min-height: 20px;max-height: 20px;"></div>
+            <div class="all-category-text">
+                <div class="all-category-title">全品类</div>
+                <div class="all-category-description">5000种食材供您选择</div>
+            </div>
+            <div class="all-category-img"></div>
+        </div>
+        <div class="col">
+            <div class="col-right-top" ui-sref="cart({backUrl: '/main/home'})">
+                <div class="home-cart-text">
+                    <div class="cart-title">购物车</div>
+                    <div class="cart-description">加入您需要的商品</div>
+                </div>
+                <div class="home-cart-img"></div>
+            </div>
+            <div class="col-right-bottom" ui-sref="activity({index:1})">
+                <div class="special-day-text">
+                    <div class="special-day-title">无忧特惠日</div>
+                    <div class="special-day-description">每周1到周3</div>
+                </div>
+                <div class="special-day-img"></div>
+            </div>
+        </div>
+    </div>
+
+    <!--限时秒杀-->
+    <div id="miaoSha" ng-click="showActiveProduct()" ng-show="showStatus">
+        <span class="miaoShaImg"></span>
+
+        <div style="width: 62%;">
+            <p class="msComment">
+                {{spikeCur.description}}
+            </p>
+
+            <p class="msCommentTwo" ng-if="timeStatus==false">
+                请您在<span style="font-weight: bold">{{time}}</span>之间下单
+            </p>
+
+            <p class="msCommentTwo" ng-if="timeStatus==true" style="color: red">
+                活动时间剩余
+            </p>
+            <span class="hour" id="timeSpan"></span>
+        </div>
+        <span class="msProduct"></span>
+
+        <div>
+
+        </div>
+    </div>
+
+    <!--<ion-list class="today-order-list">
+         <ion-item class="item item-button-right border-top-none border-bottom-none">
+             <span>今日订单</span>
+             <button class="button button-clear order-evaluation-btn home-page-order-btn" ui-sref="main.order-list">历史订单&nbsp;
+                 <span class="icon ion-ios-arrow-right"></span>
+             </button>
+         </ion-item>
+
+         <div ng-repeat="todayOrder in todayOrders | orderBy:'id':true" ng-if="profile && isNullTodayOrders === false">
+             <ion-item class="item item-icon-right">
+                 <div class="today-order-text">
+                     <span>下单时间：</span>
+                     <span style="color: #6e6e6e;">{{todayOrder.submitDate | date: "yyyy-MM-dd HH:mm"}}</span>
+                     <span class="order-state">{{todayOrder.status.name}}</span>
+                     <br/>
+                     <span>预计送达：</span>
+                     <span style="color: #6e6e6e;white-space: normal;">{{todayOrder.expectedArrivedDate | date: "yyyy-MM-dd"}}&nbsp;14点－19点</span>
+                     <br/>
+                     <span>应付金额：</span>
+                     <span style="color: #eb2828;">{{todayOrder.subTotal | currency: '￥'}}</span>
+                     <br/>
+                     <div ng-if="(isShowContactBtn(todayOrder.submitDate) || todayOrder.status.value==2) && todayOrder.tracker.telephone">
+                         <span>配送员电话：</span>
+                         <span style="color: #1564e8;" ng-click="contact(todayOrder.tracker.telephone)">{{todayOrder.tracker.telephone}}</span>
+                     </div>
+                 </div>
+                 <i class="icon ion-ios-arrow-right" ui-sref="order-detail({id:todayOrder.id, backUrl:'main.home'})"></i>
+             </ion-item>
+
+             <div class="today-order-buttons">
+                 <div class="row">
+                     &lt;!&ndash; 已下单 &ndash;&gt;
+                     <div class="col buttons-col-left" ng-if="todayOrder.status.value==3" ng-click="orderCancel(todayOrder.id)">取消订单</div>
+                     &lt;!&ndash;<div class="col" ui-sref="order-evaluate({id:todayOrder.id})" ng-if="!todayOrder.hasEvaluated && todayOrder.status.value==4">评价</div>&ndash;&gt;
+                     &lt;!&ndash;<div class="col" ui-sref="order-evaluate({id:todayOrder.id,hasEvaluated:true})" ng-if="todayOrder.hasEvaluated && todayOrder.status.value==4">查看评价</div>&ndash;&gt;
+
+                     &lt;!&ndash; 配送中 &ndash;&gt;
+                     <div class="col buttons-col-left" ng-click="orderAgain(todayOrder)" ng-if="todayOrder.status.value==2 || todayOrder.status.value==4 ">再来一单</div>
+                     <div class="col" ui-sref="order-evaluate({id:todayOrder.id})" ng-if="!todayOrder.hasEvaluated && todayOrder.status.value==4">评价</div>
+                     <div class="col" ui-sref="order-evaluate({id:todayOrder.id,hasEvaluated:true})" ng-if="todayOrder.hasEvaluated && todayOrder.status.value==4">查看评价</div>
+                 </div>
+             </div>
+         </div>
+
+         <ion-item class="today-order-none" ng-if="!profile || isNullTodayOrders === true">暂无订单</ion-item>
+     </ion-list>-->
+
+
+    <div id='customHot' class='hide'>添加成功</div>
+    <ion-list id="hot" ng-if="skusDisplayed.length>0">
+        <ion-item class="item  border-top-none border-bottom-none titleHot">
+            <div class="titleBox">
+                <span class="hotProduct"></span>
+
+                <div class="hotTitle">爆品热销</div>
+            </div>
+        </ion-item>
+        <ion-item id="btnBox" ng-repeat="sku in skusDisplayed" class="item homeHot">
+            <div id="hotBox">
+                <div class="IMG">
+                    <img ng-click="productDetail(sku.id)" class="productImg hotproductImg"
+                         ng-src="{{sku.mediaFileUrls[0]}}"/>
+                </div>
+                <h2 ng-click="productDetail(sku.id)">{{sku.name}}</h2>
+
+                <h3 style="margin: 0 8px 12px 8px;">
+                    <div style="height: 30px;">
+                        <div class="product-checkBox" ng-if="sku.b">
+                            <div class="checkBox" style="height: 30px;display: inline-block;" ng-if="sku.s && loignStatus==true"
+                                 ng-click="oneChange(sku.id,sku.bundleName,sku.c,sku.d)">
+                                <ion-checkbox ng-model="sku.c"></ion-checkbox>
+                            </div>
+                        <span class="product-danpinjia hotPrice" ng-class="{true:'show',false:'bundleShow'}[sku.s && loignStatus]">
+                            <span ng-if="sku.s">打包价:</span>
+                            <font style="color: #eb2927"  ng-if="loignStatus==true">{{sku.bundlePrice.bundleSalePrice | currency : "￥"}}</font><span  ng-if="loignStatus==true">/{{sku.bundleUnit}}</span>
+                            <span class="" ng-if="loignStatus==false" style="font-size: 12px; color: #eb2828;"><span ng-if="sku.jiage" style="color: #6e6e6e;margin-left: 5px">价格:</span>登录后可见</span>
+                        </span>&nbsp;
+                        </div>
+                    </div>
+                    <div style="height: 30px;">
+                        <div class="product-checkBox" ng-if="sku.s">
+                            <div class="checkBox" style="height: 30px;display: inline-block;" ng-if="sku.b && loignStatus==true"
+                                 ng-click="oneChange(sku.id,sku.singleName,sku.c,sku.d)">
+                                <ion-checkbox ng-model="sku.d"></ion-checkbox>
+                            </div>
+                        <span class="product-danpinjia hotPrice"
+                              ng-class="{true:'show',false:'unshow'}[sku.b && loignStatus]"><span ng-if="sku.b">单品价:</span><font
+                                style="color: #eb2927" ng-if="loignStatus==true">{{sku.singlePrice.singleSalePrice | currency : "￥"}}</font><span  ng-if="loignStatus==true">/{{sku.singleUnit}}</span>
+                            <span class="" ng-if="loignStatus==false" style="font-size: 12px; color: #f09400;"><span ng-if="sku.jiage" style="color: #6e6e6e;margin-left: 5px;">价格:</span>登录后可见</span>
+                        </span>&nbsp;
+
+                        </div>
+                    </div>
+                </h3>
+                <div class="btnBox" style="margin: 0 0 0 8px;border-color: #e2e2e2;position: relative">
+                    <a class="button button-small button-outline button-dark button-icon icon ion-ios-minus-empty mirror-number-button minus-btn-left"
+                       ng-click="lessQuantity(sku)" ng-disabled="sku.quantity==1" id="hotReduces"></a>
+                    <a class="num">{{sku.quantity}}</a>
+                    <a class="button button-small button-outline button-dark button-icon icon ion-ios-plus-empty mirror-number-button minus-btn-right"
+                       ng-click="moreQuantity(sku)" id="hotAdd"></a>
+
+                    <div id="hotGouwuche">
+                        <span ng-click="addSkuIntoCart(sku, sku.quantity,sku.c);" class="cart"></span>
+                    </div>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+</ion-content>
+
+<script id="templates/citySelectPopover.html" type="text/ng-template">
+    <div id="home-city-popover">
+        <ion-popover-view>
+            <ion-content id="city-select">
+                <ion-item class="select-city-tip">当前城市</ion-item>
+                <ion-item class="current-city-item">
+                    <button class="current-city-btn" ng-click="currentCityClick()">{{currentCity}}</button>
+                </ion-item>
+                <ion-item class="select-city-tip">当前已开通城市</ion-item>
+                <ion-item class="open-city-item">
+                    <button class="open-city-btn" ng-repeat="openCity in openCities">{{openCity.name}}</button>
+                </ion-item>
+            </ion-content>
+        </ion-popover-view>
+    </div>
+</script>

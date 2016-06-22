@@ -1,0 +1,45 @@
+<ion-header-bar class=" nav-title-slide-ios7" align-title="center">
+    <button class="button button-clear button-assertive button-back" back>
+        <i class="icon ion-ios-arrow-back"></i>
+    </button>
+    <h1 class="title">退换货信息</h1>
+</ion-header-bar>
+
+<ion-content scroll="true" id="settings">
+    <ion-list id="return">
+
+        <ion-item class="item-return  border-bottom-none" >
+            <div class="title">订单编号（<font style="color: red">必填</font>）</div>
+             <input placeholder="请填写订单编号" ng-model="form.productNum" type="number">
+        </ion-item>
+
+        <ion-item class="item-return  border-bottom-none">
+            <div class="title">商品名称（<font style="color: red">必填</font>）</div>
+             <input placeholder="请填写你要退换货的商品名称" type="text" ng-model="form.productName">
+        </ion-item>
+
+        <ion-item class="item-return  border-bottom-none">
+            <div class="title">联系人号码（<font style="color: red">必填</font>）</div>
+            <input placeholder="请填写你的联系电话" type="tel" ng-model="form.telephone">
+        </ion-item>
+
+        <ion-item class="item-return  border-bottom-none">
+            <div class="title">餐馆名称（<font style="color: red">必填</font>）</div>
+            <input placeholder="请填写餐馆名称" type="text" ng-model="form.restaurantName">
+        </ion-item>
+
+        <ion-item class="item-return border-bottom-none">
+            <div>商品退货原因（<font style="color: red">必填</font>）</div>
+            <label class="item item-input fbInput">
+                <textarea placeholder="请填写你要退换货的原因" rows="6" ng-model="form.reason"></textarea>
+            </label>
+        </ion-item>
+
+    </ion-list>
+
+    <div class="padding">
+        <button class="button button-block button-light" id="return-bottom" ng-click="submitServe(form)">提交</button>
+    </div>
+</ion-content>
+
+<div id='versionToast' class='hide'></div>
